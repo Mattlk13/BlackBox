@@ -8,44 +8,42 @@ from bs4 import BeautifulSoup
 
 header = { 'USER_AGENT' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:43.0) Gecko/20100101 Firefox/43.0'}
 
-# Space optimized Python 
-# implementation of LCS problem 
 
-# Returns length of LCS for 
-# X[0..m-1], Y[0..n-1] 
-def LCS(X, Y): 
-	
-	# Find lengths of two strings 
-	m = len(X) 
-	n = len(Y) 
+def LCS(show,A):
+   show=show.lower()
+   A=A.lower()
 
-	L = [[0 for i in range(n+1)] for j in range(2)] 
+   show=show.replace(" ","")
+   A=A.replace(" ","")
+   n=len(show)
+   m=len(A)
+##   print(show)
+##   print(A)
+##   print(n,m,"\n\n")
+   n=n+2
+   m=m+2
+   arr=[[0]*(n) for i in range(m)]  
 
-	# Binary index, used to index current row and 
-	# previous row. 
-	bi = bool
-	
-	for i in range(m): 
-		# Compute current binary index 
-		bi = i&1
-
-		for j in range(n+1): 
-			if (i == 0 or j == 0): 
-				L[bi][j] = 0
-
-			elif (X[i] == Y[j - 1]): 
-				L[bi][j] = L[1 - bi][j - 1] + 1
-
-			else: 
-				L[bi][j] = max(L[1 - bi][j], 
-							L[bi][j - 1]) 
-
-	# Last filled entry contains length of LCS 
-	# for X[0..n-1] and Y[0..m-1] 
-	return L[bi][n] 
+  
+   for i in range(m-1):
+     for j in range(n-1):
+##        print(i,j)
+        if i==0 or j==0:
+          pass
+        elif(show[j-1]==A[i-1]):
+          arr[i][j]=arr[i-1][j-1]+1
+        else:
+          arr[i][j]=max(arr[i-1][j],arr[i][j-1])
+   
+##   for i in range(m-1):
+##     print("\n")
+##     for j in range(n-1):
+##       print(arr[i][j],end=" ")
+##   print(arr[m-2][n-2])
+   return arr[m-2][n-2]
 
 
-
+    
 def spell(show):
   show2 = show
   show="TV series "+show+" IMDB"
@@ -62,7 +60,7 @@ def spell(show):
           for url in soup.find_all('a'):
             if("1" == url.text):
                break
-            if(url.get('href') is not None  and "www.imdb.com/title/" in url.get('href')):
+            if("www.imdb.com/title/" in url.get('href')):
               corrected=''
               for s in url.text :
                 if( s!='('):
@@ -83,10 +81,10 @@ def spell(show):
             elif(len(k)>len(i) and r==max_match):
                 k=i
                 max_match=r
+            
           return(k)
       else:
          pass
 ##          print("503")
-##             print(str(url)+"\n"+str(url.text)+"\n")
+      
 
-print(spell('suits'))

@@ -9,7 +9,7 @@ import Next_epi,os
 import interneton
 import os
 import signal
-
+from spell_catcher import *
 
 j=''
 value=''
@@ -115,7 +115,17 @@ if __name__=="__main__":
                 std.addstr(4,1,"please Enter episode correctly")
                 std.addstr(3 ,1,"Enter the episode as '02' or '2'      ")
                 std.addstr(3 ,1,"Enter the episode as '02' or '2' ")
-        std.addstr(4,1, " "*len("please Enter episode correctly"))        
+        std.addstr(4,1, " "*len("please Enter episode correctly"))
+        new_name =  spell(s_name.decode('utf-8'))
+        if(new_name != s_name.decode('utf-8')):
+            std.addstr(4 ,1," Did you mean this {0} ? (y/n)".format(new_name))
+            value = std.getstr(4,len(" Did you mean this {0} ? (y/n) ".format(new_name))+1,1)
+            if(value.decode('utf-8').lower() == 'y' or value.decode('utf-8').lower() == 'yes' ):
+                s_name = new_name.encode('utf-8')
+            else:
+                pass
+        std.addstr(4 ,1," "*(len(" Did you mean this {0} ? (y/n) ".format(new_name)+len(value))))
+        std.refresh()
         thread_1=threading.Thread(target=search,args=(s_name.decode("utf-8"),s_seasons.decode("utf-8"),s_episode.decode("utf-8")))
         thread_2=threading.Thread(target=search_tag, args=())
         thread_1.start()

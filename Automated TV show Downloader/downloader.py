@@ -127,7 +127,7 @@ class download:
                 speed = download/(1024*time_spend)
                 f.flush()
                 pos+= len (buff)
-                stdscr.addstr(10,0,"Thread 3 : {}% {}KB/s completed {}MB seconds passed {} ".format(download_status,speed,download/1024/1024,time_spend))
+                stdscr.addstr(10,0,"Thread : {}% {}KB/s completed {}MB seconds passed {} ".format(download_status,speed,download/1024/1024,time_spend))
                 threadLock.release()
         except Exception as e:
             print(str(e))
@@ -164,7 +164,7 @@ class download:
                 speed = 0
                 threadLock = threading.Lock()
                 start =time.time()
-                self.write_3(req3,file_size,0,threadLock,f)
+                self.write_3(req,file_size,0,threadLock,f)
                 
             else:
                 stdscr.addstr(2,0,'Resumable content {}'.format(req.headers['Connection']))

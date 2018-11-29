@@ -39,23 +39,35 @@ class pro:
     if( req.status_code == requests.codes.ok):      
         soup=BeautifulSoup(req.text,'lxml')            
         for url in soup.find_all('a'):
-          if("https://www.episodate.com/" in url.get("href")):
-##            if(url.get("href").split('/')[-1].lower()==show.lower()):
+          if(url.get('href') is not None):
+            if("https://www.episodate.com/" in url.get("href")):
+##              if(url.get("href").split('/')[-1].lower()==show.lower()):
+##                print(url.get("href"))
+                self.url=url.get("href")
+                flag+=1
+
+            if(flag==2):
+                break
+              
+            if ("https://next-episode.net/" in url.get("href") and flag==0):
 ##              print(url.get("href"))
-              self.url=url.get("href")
+              self.url2=url.get("href")
               flag+=1
+    try:
+      req = requests.get(self.url,headers = self.header)
+    except:
+      pass
+    
+    try:
+      req2 = requests.get(self.url2,headers = self.header)
+    except:
+      pass
 
-          if(flag==2):
-              break
-            
-          if ("https://next-episode.net/" in url.get("href") and flag==0):
-##            print(url.get("href"))
-            self.url2=url.get("href")
-            flag+=1
-
-    req = requests.get(self.url,headers = self.header)
-    req2 = requests.get(self.url2,headers = self.header)
-    value = self.check(self.url.split('/')[-1])
+    try:
+      value = self.check(self.url.split('/')[-1])
+    except:
+      value=False
+    
     if ( value == True):
         return "Already in the list, Sir!!"
     else:

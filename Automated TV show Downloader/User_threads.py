@@ -6,6 +6,7 @@ import requests
 import time
 import threading
 import spell_catcher
+import math as m
 
 header = { 'USER_AGENT' : 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:43.0) Gecko/20100101 Firefox/43.0'}
 
@@ -22,10 +23,10 @@ def func(name,show,urlf,lock,show_file,w):
 
     for line in w:
       url=line.strip("\n")
-##      print(url)
+##      print(url+" "+name)
 
       try:
-            req = requests.get(url,headers = header,timeout=10)
+            req = requests.get(url,headers = header,timeout=40)
 ##            print(req.status_code)
             if(req.status_code==200):
               soup=bs4.BeautifulSoup(req.text,"lxml")
@@ -39,12 +40,14 @@ def func(name,show,urlf,lock,show_file,w):
 
 
                 if  matched is not None:
-                  abc_href=url.get("href")
-                  f_url=line.strip("\n")+abc_href
+                  if("farsi" not in url.get("href") and "dub" not in url.get("href")):
+                      abc_href=url.get("href")
+                      f_url=line.strip("\n")+abc_href
 ##                  print(f_url)
-                  with lock:
-                    show_file.write(f_url)
-                    show_file.write('\n')
+                      with lock:
+##                        print(line.strip('\n')+"writting")
+                        show_file.write(f_url)
+                        show_file.write('\n')
                   
               count_1+=1
 ##              print("count_{} is:".format(name),count_1)
@@ -53,6 +56,7 @@ def func(name,show,urlf,lock,show_file,w):
                pass
             
       except Exception as e:
+##          print(url,e,"exception")
           pass
 ##           print("in :"+name)
 ##           print(str(e)+'\n')
@@ -67,7 +71,7 @@ def func(name,show,urlf,lock,show_file,w):
 def final(show):
     show_file=open("matched_1.txt","w")
     w=open("resource_1.txt","r")
-    show = spell_catcher.spell(show)
+##    show = spell_catcher.spell(show)
 ##    print(show)
 ##    show=input("showname ")
     a = re.findall( r"\W",show)
@@ -92,13 +96,19 @@ def final(show):
       for i in range(l):
         urlf+=(str1+words[i]+str2)
 
-
+    urls = []
+    for i in w.readlines():
+        urls.append(i.strip("\n"))
+        
+    factor = int(m.ceil(len(urls)/6))
+##    print(len(urls))
+##    for i in range(4):
+##        print(urls[factor*i:factor*(i+1)])
 
     lock=threading.Lock()
-    
     thread=[]
-    for i in range(3):
-        t=threading.Thread(target=func, args=(str(i),show,urlf,lock,show_file,w))
+    for i in range(6):
+        t=threading.Thread(target=func, args=(str(i),show,urlf,lock,show_file,urls[factor*i:factor*(i+1)]))
         thread.append(t)
 
 
@@ -117,6 +127,5 @@ def final(show):
     return "user_thread done"
 
 
-
-
+##print(final("Sacred Games"))
     
