@@ -19,4 +19,7 @@ http://dl6.lavinmovie.net/Series/
 http://finalmovie.parsaspace.com/Series/
 http://dl2.funsaber.net/serial/
 http://dl.filmbaroon.net/serial/
+<<<<<<< HEAD
 http://dl2.funsaber.net/serial/
+=======
+>>>>>>> d26d09a0556ebdb1322ea4fac20a5cc60c23f822
